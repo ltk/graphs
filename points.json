@@ -1,0 +1,15 @@
+{
+    "points": [
+        { "Node.clear": 1 },        
+        { "Edge.setType": 1 },        
+        { "Graph.clear": 1 },
+        { "Node.setColor": 1 },
+        { "Node.getDisco": 1 },
+        { "Node.setPredecessor": 1 },
+        { "Node.isAncestor": 1 },
+        { "Graph.dfs": 4 },
+        { "Graph.dfs edges": 3 },
+        { "Graph.bfs 1": 4 },
+        { "Graph.bfs 2": 2 }
+    ]
+}
