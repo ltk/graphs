@@ -160,8 +160,9 @@ TEST_CASE("Graph: depth-first search, no target", "[Graph.dfs]") {
   REQUIRE(a->discovery_time == 0); // start node discovered at t=0
   REQUIRE(a->completion_time == 13); // should finish at exactly t=13
   int c, dt, ft, r;
-  for (auto it=g->getNodes().begin(); it != g->getNodes().end(); ++it) {
+  for (auto it=g->nodes.begin(); it != g->nodes.end(); ++it) {
     Node* n = *it;
+    REQUIRE(n != NULL);
     n->getDiscoveryInformation(c, dt, ft, r);
     REQUIRE(c == BLACK); // all nodes should be fully explored
     REQUIRE(dt >= 0); // discovered between 0 and 6 inclusive;
@@ -188,8 +189,9 @@ TEST_CASE("Graph: depth-first search edge types", "[Graph.dfs edges]") {
   int numTree = 0;
   int numBack = 0;
   int numCross = 0;
-  for (auto it=g->getEdges().begin(); it != g->getEdges().end(); ++it) {
+  for (auto it=g->edges.begin(); it != g->edges.end(); ++it) {
     Edge* e = *it;
+    REQUIRE(e != NULL);
     if (e->getType() == FORWARD_EDGE) {
       numFwd++;
     } else if (e->getType() == TREE_EDGE) {
