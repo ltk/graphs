@@ -60,17 +60,26 @@ using the `getAdjacentEdges` set.
 
 ## The auto keyword
 
-The 'auto' keyword can make life easier when iterating through a
-collection. My solution is littered with code like the following:
+The `auto` keyword can make life easier when iterating through a
+collection. It leverages the compiler to 'figure out' what type would be
+assigned for you (this only works for assignment, you cannot use `auto` for
+example in function parameters). Also note that it is NOT like Python's dynamic
+types, the type must still be known at compile time.
 
-```
-for (auto it=g->nodes.begin(); it != g->nodes.end(); ++it) {
-  Node* n = *it;
-    
+You can use `auto` to cleanly iterate over C++ collections:
+```cpp
+for (auto n : nodes) {
+  // N right here will be a single node, one at a time.
 }
 ```
 
-(and I do mean _littered_, it just looks awful)
+A more correct way to handle iteration (which forces const and that the value is
+iterated by reference resulting in zero-copy):
+```cpp
+for (const auto& n : nodes) {
+  // N right here will be a single node, one at a time.
+}
+```
 
 ## Use `make_dot`
 
