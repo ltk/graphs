@@ -4,13 +4,13 @@
 
 #define CATCH_CONFIG_MAIN
 
+#include "catch.hpp"
+
 // in order to access private members, we have to defeat the safety
 // mechanisms. This is acceptable for unit testing, but not much
 // else. It is also not portable because it is not supported by the
 // C++ spec, and therefore might not work with all compilers.
 #define private public
-
-#include "catch.hpp"
 #include "graph.hpp"
 
 using namespace std;
