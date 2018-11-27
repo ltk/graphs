@@ -98,7 +98,16 @@ set<Edge*> Graph::getAdjacentEdges(Node& n) {
 }
 
 void Graph::clear() {
-  // TODO
+  // Clear all nodes.
+  for (int i = 0; i < this->nodes.size(); i++) {
+    this->nodes[i]->clear();
+  }
+  // Set undiscovered type for all edges.
+  for (int i = 0; i < this->edges.size(); i++) {
+    this->edges[i]->setType(UNDISCOVERED_EDGE);
+  }
+  // Reset graph clock.
+  this->clock = 0;
 }
 
 void Graph::tick(string message) {
@@ -151,11 +160,6 @@ void Node::setRank(int r) {
 }
 
 void Node::clear() {
-  // TODO
-  // clear resets all nodes to have WHITE color, with -1 discovery and
-  // finish times and rank. Resets all edges to type
-  // UNDISCOVERED_EDGE. It resets the graph clock to 0.
-  // this->setColor(WHITE, -1);
   this->discovery_time = -1;
   this->completion_time = -1;
   this->rank = -1;
@@ -165,6 +169,15 @@ void Node::clear() {
 
 void Node::setColor(int search_color, int time) {
   // TODO
+  this->color = search_color;
+  if (search_color == BLACK) {
+    this->completion_time = time;
+  } else if (search_color == WHITE) {
+    this->completion_time = -1;
+    this->discovery_time = -1;
+  } else {
+    this->discovery_time = time;
+  }
 }
 
 void Node::getDiscoveryInformation(int& color, int& disco_time, 
@@ -209,6 +222,7 @@ int Edge::getType() {
 
 void Edge::setType(int edge_type) {
   // TODO
+  this->type = edge_type;
 }
 
 // overloading operator << lets you put a Graph object into an output
