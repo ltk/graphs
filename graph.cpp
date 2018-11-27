@@ -152,6 +152,15 @@ void Node::setRank(int r) {
 
 void Node::clear() {
   // TODO
+  // clear resets all nodes to have WHITE color, with -1 discovery and
+  // finish times and rank. Resets all edges to type
+  // UNDISCOVERED_EDGE. It resets the graph clock to 0.
+  // this->setColor(WHITE, -1);
+  this->discovery_time = -1;
+  this->completion_time = -1;
+  this->rank = -1;
+  this->color = WHITE;
+  this->predecessor = NULL;
 }
 
 void Node::setColor(int search_color, int time) {
