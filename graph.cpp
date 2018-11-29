@@ -123,7 +123,55 @@ void Graph::tick(string message) {
 }
 
 void Graph::dfs(Node& start) {
-  // TODO
+  // mark node gray
+  start.setColor(GRAY, this->clock);
+  this->clock += 1;
+
+  //  visit node
+  set<Edge*> related_edges = this->getAdjacentEdges(start);
+  for(auto related_edge : related_edges) {
+    Node* edge_start = related_edge->getStart();
+    Node* edge_end = related_edge->getEnd();
+
+    Node* related_node;
+    if (edge_start == &start) {
+      related_node = edge_end;
+    } else {
+      related_node = edge_start;
+    }
+
+    int related_color;
+    int related_disco_time;
+    int related_finish_time;
+    int related_bfs_rank;
+    related_node->getDiscoveryInformation(related_color, related_disco_time, related_finish_time, related_bfs_rank);
+
+    if (related_color == WHITE) {
+      edge_end->setPredecessor(*edge_start);
+      related_edge->setType(TREE_EDGE);
+      this->dfs(*related_node);
+    } else if (related_color == GRAY)  {
+      related_edge->setType(BACK_EDGE);
+    } else {
+      if (edge_end->isAncestor(*edge_start)) {
+        related_edge->setType(FORWARD_EDGE);
+      } else {
+        related_edge->setType(CROSS_EDGE);
+      }
+    }
+  } 
+  
+  // for (int i = 0; i < related_edges.size(); i++) {
+  //   Edge* related_edge = related_edges.[i];
+  // }
+  //  for each edge e related to node:
+  //  other = other end of e
+  //  if other is unmarked:
+  //  DFS(other)
+  //  mark node black
+
+  start.setColor(BLACK, this->clock);
+  this->clock += 1;
 }
 
 void Graph::bfs(Node& start) {
@@ -168,7 +216,6 @@ void Node::clear() {
 }
 
 void Node::setColor(int search_color, int time) {
-  // TODO
   this->color = search_color;
   if (search_color == BLACK) {
     this->completion_time = time;
@@ -182,16 +229,24 @@ void Node::setColor(int search_color, int time) {
 
 void Node::getDiscoveryInformation(int& color, int& disco_time, 
 				   int& finish_time, int& bfs_rank) {
-  // TODO
+  color = this->color;
+  disco_time = this->discovery_time;
+  finish_time = this->completion_time;
+  bfs_rank = this->rank;
 }
 
 bool Node::isAncestor(Node& other) {
-  // TODO
-  return false;
+  if (&other == this) {
+    return true;
+  } else if (this->predecessor != NULL) {
+    return this->predecessor->isAncestor(other);
+  } else {
+    return false;
+  }
 }
 
 void Node::setPredecessor(Node& other) {
-  // TODO
+  this->predecessor = &other;
 }
 
 Edge::Edge(Node& n1, Node& n2) {
