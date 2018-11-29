@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <queue>
 
 #include "graph.hpp"
 
@@ -159,23 +160,61 @@ void Graph::dfs(Node& start) {
         related_edge->setType(CROSS_EDGE);
       }
     }
-  } 
-  
-  // for (int i = 0; i < related_edges.size(); i++) {
-  //   Edge* related_edge = related_edges.[i];
-  // }
-  //  for each edge e related to node:
-  //  other = other end of e
-  //  if other is unmarked:
-  //  DFS(other)
-  //  mark node black
+  }  
 
   start.setColor(BLACK, this->clock);
   this->clock += 1;
 }
 
 void Graph::bfs(Node& start) {
-  // TODO
+  // vector<Node*> search_queue;
+  queue<Node*> search_queue;
+  int rank = 0;
+
+  search_queue.push(&start);
+  start.setColor(GRAY, this->clock);
+  start.setRank(rank);
+  this->clock += 1;
+
+  while (!search_queue.empty()) {
+    Node* node = search_queue.front();
+    search_queue.pop();
+    node->setColor(BLACK, this->clock);
+    this->clock += 1;
+
+    int color;
+    int disco_time;
+    int finish_time;
+    int bfs_rank;
+    node->getDiscoveryInformation(color, disco_time, finish_time, bfs_rank);
+
+    set<Edge*> related_edges = this->getAdjacentEdges(*node);
+    for(auto related_edge : related_edges) {
+      Node* other_node = related_edge->getEnd();
+
+      int related_color;
+      int related_disco_time;
+      int related_finish_time;
+      int related_bfs_rank;
+      other_node->getDiscoveryInformation(related_color, related_disco_time, related_finish_time, related_bfs_rank);
+      
+      
+      
+
+
+      if (related_color == WHITE) {
+        other_node->setColor(GRAY, this->clock);
+        this->clock += 1;
+        search_queue.push(other_node);
+        // other_node->setRank(bfs_rank + 1);
+      }
+
+      if (related_bfs_rank == -1 || related_bfs_rank > bfs_rank + 1) {
+        cout << other_node->getData() << " RANK IS NOW " << (bfs_rank + 1) << endl;
+        other_node->setRank(bfs_rank + 1);
+      }
+    }
+  }
 }
 
 void Graph::bfs(Node& start, Node& finish) {
