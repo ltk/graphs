@@ -167,7 +167,6 @@ void Graph::dfs(Node& start) {
 }
 
 void Graph::bfs(Node& start) {
-  // vector<Node*> search_queue;
   queue<Node*> search_queue;
   int rank = 0;
 
@@ -197,10 +196,6 @@ void Graph::bfs(Node& start) {
       int related_finish_time;
       int related_bfs_rank;
       other_node->getDiscoveryInformation(related_color, related_disco_time, related_finish_time, related_bfs_rank);
-      
-      
-      
-
 
       if (related_color == WHITE) {
         other_node->setColor(GRAY, this->clock);
@@ -218,7 +213,60 @@ void Graph::bfs(Node& start) {
 }
 
 void Graph::bfs(Node& start, Node& finish) {
-  // TODO
+  bool stop = false;
+  queue<Node*> search_queue;
+  int rank = 0;
+
+  search_queue.push(&start);
+  start.setColor(GRAY, this->clock);
+  start.setRank(rank);
+  this->clock += 1;
+
+  while (!search_queue.empty()) {
+    Node* node = search_queue.front();
+    search_queue.pop();
+    node->setColor(BLACK, this->clock);
+    this->clock += 1;
+
+    int color;
+    int disco_time;
+    int finish_time;
+    int bfs_rank;
+    node->getDiscoveryInformation(color, disco_time, finish_time, bfs_rank);
+    
+    set<Edge*> related_edges = this->getAdjacentEdges(*node);
+    for(auto related_edge : related_edges) {
+      Node* other_node = related_edge->getEnd();
+
+      
+
+      int related_color;
+      int related_disco_time;
+      int related_finish_time;
+      int related_bfs_rank;
+      other_node->getDiscoveryInformation(related_color, related_disco_time, related_finish_time, related_bfs_rank);
+
+      if (!stop && related_color == WHITE) {
+        other_node->setColor(GRAY, this->clock);
+        this->clock += 1;
+        search_queue.push(other_node);
+      }
+
+      if (related_bfs_rank == -1 || related_bfs_rank > bfs_rank + 1) {
+        cout << other_node->getData() << " RANK IS NOW " << (bfs_rank + 1) << endl;
+        if (this->isDirected()) {
+          other_node->setRank(bfs_rank + 1);
+        } else {
+          other_node->setRank(1);
+        }
+        
+      }
+
+      if (other_node->getData() == finish.getData()) {
+        stop = true;
+      }
+    }
+  }
 }
 
 Node::Node(string s) {
